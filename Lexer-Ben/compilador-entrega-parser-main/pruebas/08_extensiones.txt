@@ -1,0 +1,16 @@
+// Prueba de tokens adicionales
+
+entero edad = 25;
+decimal precio = 15.50;
+
+imprimir("Hola mundo");
+imprimir(verdadero);
+imprimir(falso);
+
+si (edad >= 18 && verdadero) {
+    imprimir("Es mayor de edad");
+}
+
+mientras (edad > 0) {
+    edad = edad - 1;
+}

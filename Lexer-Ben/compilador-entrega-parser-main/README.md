@@ -1,121 +1,344 @@
-# MiCompilador — Entrega Lexer + Parser + AST
+\# MiCompilador — Lexer + Parser + AST + Análisis Semántico
 
-Este proyecto es una **base para completar**, no un parser resuelto. El objetivo es integrar el **lexer que ya desarrollaste** con un analizador sintáctico que genere un AST. No incluye análisis semántico, TAC ni máquina virtual.
 
-## Contenido proporcionado por el docente
 
-- `main.py`: punto de entrada del compilador. Llama al lexer y después al parser.
-- `lexer/token.py`: clase `Token(tipo, valor, linea)`.
-- `lexer/lexer.py`: lexer base funcional **de referencia**.
-- `arbol_ast/nodos.py`: clases de AST (`Programa`, `Declaracion`, `Asignacion`, `Numero`, `Identificador`, `OpBinaria`, `Si`, `Mientras`, `Imprimir`).
-- `parser/parser.py`: clase `Parser`, atributos de control, `avanzar()` y `coincidir()` completos, y 12 métodos marcados con `TODO`.
-- `pruebas/`: archivos para probar casos válidos, errores y precedencia; tests de Python.
+\## Descripción
 
-**IMPORTANTE:** reemplaza el lexer de referencia con **tu propio lexer de la entrega anterior** y CONSERVA todos los tokens adicionales que implementaste. Asegúrate de que `Lexer(codigo).analizar()` produzca una lista de `Token` y termine con `EOF`.
 
-## Estructura
 
-```text
-MiCompilador/
-├── main.py
-├── lexer/
-│   ├── __init__.py
-│   ├── token.py
-│   └── lexer.py
-├── parser/
-│   ├── __init__.py
-│   └── parser.py           ← COMPLETAR TODO
-├── arbol_ast/
-│   ├── __init__.py
-│   └── nodos.py
-└── pruebas/
-    ├── 01_basico_valido.txt
-    ├── 02_expresiones.txt
-    ├── 03_control.txt
-    ├── 04_error_falta_punto_coma.txt
-    ├── 05_error_declaracion.txt
-    ├── 06_solo_error_semantico_futuro.txt
-    ├── 07_token_personalizado_EDITAR.txt
-    └── test_integracion.py
-```
+Proyecto de compilador incremental desarrollado en Python. Parte de la integración del analizador léxico propio, el analizador sintáctico y el Árbol de Sintaxis Abstracta (AST), desarrollados en entregas anteriores.
 
-La carpeta `arbol_ast` se llama así, en lugar de `ast`, para evitar colisiones con el **módulo estándar `ast` de Python**.
 
-## Cómo ejecutar
 
-No hay dependencias de terceros (Python 3.10 o superior). Desde la raíz del proyecto:
+En esta etapa se incorpora el análisis semántico para verificar la validez de las declaraciones, variables, tipos de datos, operaciones y condiciones del lenguaje.
 
-```bash
-python main.py --solo-lexer
-python main.py
-python main.py pruebas/02_expresiones.txt
-python main.py pruebas/04_error_falta_punto_coma.txt
-```
 
-Al principio, `python main.py` imprime los tokens y `[IMPLEMENTACION PENDIENTE] TODO 1 ...`. Esto es **intencional**: el parser aún no está implementado.
 
-## Trabajo del estudiante: cuatro bloques
+\## Objetivo
 
-### A. Declaraciones y asignaciones
-Completar en `parser/parser.py`: `parsear()`, `sentencia()`, `declaracion()`, `asignacion()`.
 
-**Ejemplo:** `entero edad = 20; edad = 21;` debe producir un `Programa` con dos sentencias AST. Para reconocer un token, usa `coincidir('PR_ENTERO')`, `coincidir('ID')`, `coincidir('=')` o `coincidir(';')`, según corresponda. `coincidir()` acepta **tipo o valor**.
 
-**Para probar primero la parte A:** una versión inicial de `factor()` puede leer únicamente `NUMERO` e `ID`, mientras `expresion()`, `aritmetica()` y `termino()` delegan a su siguiente nivel. Después amplía estos métodos con operadores en la parte B. Así no necesitas terminar toda la precedencia para probar la declaración sencilla.
+Continuar el desarrollo del compilador conservando los componentes implementados anteriormente e integrando una nueva fase de análisis semántico.
 
-### B. Expresiones y precedencia
-Completar `expresion()`, `aritmetica()`, `termino()`, `factor()`. Para `5 + 3 * 2` se espera un nodo `OpBinaria` con `op = "+"` cuya rama derecha sea la multiplicación, no una suma y luego una multiplicación al mismo nivel.
 
-### C. Sentencias y control
-Completar `sentencia_imprimir()`, `sentencia_si()`, `sentencia_mientras()`, `bloque()`, e integrar esas opciones en `sentencia()`.
 
-### D. Tokens adicionales de tu lexer
-Debes **adaptar el parser a tu extensión personal** cuando afecte a la sintaxis. Por ejemplo:
+El compilador procesa el código fuente mediante tres fases:
 
-| Token previo | Cambio posible |
+
+
+1\. Análisis léxico (Lexer).
+
+2\. Análisis sintáctico (Parser y generación del AST).
+
+3\. Análisis semántico (validación de reglas del lenguaje).
+
+
+
+\## Componentes del proyecto
+
+
+
+\- \*\*Lexer:\*\* reconoce los tokens del código fuente y conserva las extensiones implementadas en la entrega anterior.
+
+\- \*\*Parser:\*\* verifica la estructura sintáctica de las instrucciones.
+
+\- \*\*AST:\*\* representa el programa mediante nodos como declaraciones, asignaciones, operaciones y estructuras de control.
+
+\- \*\*Analizador semántico:\*\* recorre el AST y comprueba la compatibilidad de tipos, declaraciones, variables y condiciones.
+
+
+
+\## Características del lenguaje
+
+
+
+El lenguaje contempla:
+
+
+
+\- Declaración y asignación de variables.
+
+\- Tipos de datos: `entero`, `decimal`, `cadena` y `booleano`.
+
+\- Operaciones aritméticas: `+`, `-`, `\*` y `/`.
+
+\- Operadores relacionales: `==`, `!=`, `<`, `>`, `<=` y `>=`.
+
+\- Operadores lógicos: `\&\&`, `||` y `!`.
+
+\- Estructuras condicionales: `si`.
+
+\- Ciclos: `mientras`.
+
+\- Instrucciones de salida: `imprimir`.
+
+
+
+\### Extensiones personales
+
+
+
+Se conservan las características adicionales del lenguaje desarrolladas en las entregas anteriores. En esta etapa se incorporan sus respectivas validaciones semánticas cuando corresponde.
+
+
+
+Los operadores lógicos, los valores decimales y booleanos cuentan con reglas de validación de tipos. Los comentarios descartados por el Lexer no requieren procesamiento adicional en el Parser ni en el analizador semántico.
+
+
+
+\## Análisis semántico
+
+
+
+El analizador semántico valida las reglas del lenguaje mediante el recorrido del AST.
+
+
+
+Entre sus verificaciones se encuentran:
+
+
+
+\- Evitar declaraciones duplicadas.
+
+\- Detectar el uso de variables no declaradas.
+
+\- Comprobar la compatibilidad de tipos en declaraciones y asignaciones.
+
+\- Validar operaciones aritméticas, relacionales y lógicas.
+
+\- Comprobar que las condiciones de `si` y `mientras` sean booleanas.
+
+
+
+\### Tabla de símbolos
+
+
+
+La tabla de símbolos almacena información de las variables declaradas durante el análisis.
+
+
+
+| Campo | Descripción |
+
 |---|---|
-| `%` con tipo `OP_MOD` | Agregar `%` a `termino()` y representar la operación en `OpBinaria`. |
-| `DECIMAL` | Reconocerlo en `factor()` y definir cómo se verá en el AST. |
-| `sino` | Añadir la rama al parser y adaptar la clase `Si` o crear un nodo. |
-| `&&`, `||` | Agregar niveles de precedencia al parser. |
-| `<=` / `>=` como `OP_REL` | La regla por categoría `OP_REL` ya puede cubrirlos; verificarlo con pruebas. |
-| Comentario `//` descartado por el lexer | No es necesario enviarlo al parser. |
 
-**Que el lexer reconozca un token NO garantiza que el parser admita su uso en el código fuente.** Debes probar una cadena válida y una inválida con tu extensión. Si no requiere cambio en el parser, explica la razón.
+| Nombre | Identificador de la variable. |
 
-## Gramática base orientativa
+| Tipo | Tipo de dato declarado. |
+
+| Valor | Estado de inicialización. |
+
+
+
+Ejemplo:
+
+
+
+Código fuente:
+
+
 
 ```text
-programa    → sentencia* EOF
-sentencia   → declaracion | asignacion | imprimir | si | mientras
-declaracion → 'entero' ID '=' expresion ';'
-asignacion  → ID '=' expresion ';'
-imprimir    → 'imprimir' '(' expresion ')' ';'
-si          → 'si' '(' expresion ')' bloque
-mientras    → 'mientras' '(' expresion ')' bloque
-bloque      → '{' sentencia* '}'
-expresion   → aritmetica (OP_REL aritmetica)*
-aritmetica  → termino (('+' | '-') termino)*
-termino     → factor (('*' | '/') factor)*
-factor      → NUMERO | ID | '(' expresion ')'
+
+entero edad = 20;
+
+edad = 21;
+
 ```
 
-## Comprobar avances
+
+
+Resultado:
+
+
+
+```python
+
+{
+
+&#x20;   "edad": {
+
+&#x20;       "tipo": "entero",
+
+&#x20;       "valor": "inicializado"
+
+&#x20;   }
+
+}
+
+```
+
+
+
+\## Estructura del proyecto
+
+
+
+```text
+
+MiCompilador/
+
+├── main.py
+
+├── lexer/
+
+│   ├── \_\_init\_\_.py
+
+│   ├── token.py
+
+│   └── lexer.py
+
+├── parser/
+
+│   ├── \_\_init\_\_.py
+
+│   └── parser.py
+
+├── arbol\_ast/
+
+│   ├── \_\_init\_\_.py
+
+│   └── nodos.py
+
+├── semantic/
+
+│   └── analizador.py
+
+├── pruebas/
+
+│   ├── test\_integracion.py
+
+│   └── test\_semantico.py
+
+└── README.md
+
+```
+
+
+
+\## Requisitos
+
+
+
+\- Python 3.10 o superior.
+
+\- No requiere dependencias externas de terceros.
+
+
+
+\## Ejecución
+
+
+
+Desde la carpeta raíz del proyecto:
+
+
+
+Ejecutar el compilador completo:
+
+
 
 ```bash
-python -m unittest pruebas.test_integracion.TestLexer
-python -m unittest pruebas.test_integracion.TestParserBasico
-python -m unittest pruebas.test_integracion.TestExpresiones
-python -m unittest pruebas.test_integracion.TestControl
-python -m unittest pruebas.test_integracion.TestErrores
+
+python main.py
+
 ```
 
-Las pruebas del parser fallarán mientras queden métodos pendientes: **es normal** y permite revisar cada etapa por separado. No cambies los casos de prueba para ocultar errores.
 
-## Diferencia fundamental con semántica
 
-`entero x = ;` contiene tokens reconocibles, pero es **sintácticamente inválido**. En cambio, `x = 10;` es **sintácticamente válido**, aunque `x` no esté declarada: esa validación corresponde a la próxima fase (**semántica**). No implemente tabla de símbolos ni validaciones de tipos en esta etapa.
+Ejecutar con un archivo específico:
 
-## Entregable
 
-Subir el proyecto actualizado a GitHub. Presentar evidencia de: integración con el lexer propio, AST correcto, detección de error sintáctico y prueba de la extensión personal. La semántica queda pendiente.
+
+```bash
+
+python main.py pruebas/01\_basico\_valido.txt
+
+```
+
+
+
+Ejecutar solamente el Lexer:
+
+
+
+```bash
+
+python main.py --solo-lexer
+
+```
+
+
+
+\## Pruebas
+
+
+
+Ejecutar todas las pruebas:
+
+
+
+```bash
+
+python -m unittest discover -v
+
+```
+
+
+
+Ejecutar las pruebas de integración:
+
+
+
+```bash
+
+python -m unittest pruebas.test\_integracion -v
+
+```
+
+
+
+Ejecutar las pruebas semánticas:
+
+
+
+```bash
+
+python -m unittest pruebas.test\_semantico -v
+
+```
+
+
+
+\## Resultados de las pruebas
+
+
+
+Durante la validación del proyecto se obtuvieron los siguientes resultados:
+
+
+
+| Categoría | Pruebas aprobadas |
+
+|---|---:|
+
+| Lexer, Parser y AST | 14 |
+
+| Análisis semántico | 10 |
+
+| \*\*Total\*\* | \*\*24\*\* |
+
+
+
+Todas las pruebas ejecutadas finalizaron correctamente.
+
+
+
+\## Conclusión
+
+
+
+El compilador integra las fases léxica, sintáctica y semántica, conservando los componentes desarrollados en las entregas anteriores. La incorporación del análisis semántico permite detectar errores relacionados con variables, declaraciones, tipos de datos, operaciones y condiciones, además de generar una tabla de símbolos con la información de las variables declaradas.
+
+
+

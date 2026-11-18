@@ -1,2 +1,0 @@
-entero edad = 20;
-edad = 21;

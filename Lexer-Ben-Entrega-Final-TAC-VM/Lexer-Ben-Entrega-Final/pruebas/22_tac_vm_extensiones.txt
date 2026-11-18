@@ -1,0 +1,15 @@
+// Extensiones personales: decimal, cadena, booleanos, operadores lógicos y unarios
+entero contador = 0;
+decimal precio = 12.50;
+imprimir("Inicio de pruebas");
+imprimir(precio);
+imprimir(!falso);
+imprimir(-3);
+si (precio >= 10.0 && verdadero) {
+    imprimir("Precio válido");
+}
+mientras (contador < 3) {
+    imprimir(contador);
+    contador = contador + 1;
+}
+imprimir(contador == 3 || falso);
